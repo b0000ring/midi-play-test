@@ -1,0 +1,20 @@
+.pad {
+    --height: 100%;
+    background-color: var(--gray-a3);
+    background-clip: padding-box;
+    border: 1px solid var(--gray-a5);
+    border-radius: var(--radius-1);
+
+    &:hover {
+        cursor: pointer;
+        background-color: #004074;
+    }
+
+    &.selected {
+        background-color: #174933;
+    }
+
+    &.active {
+        background-color: #611623;
+    }
+}
