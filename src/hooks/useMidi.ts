@@ -18,68 +18,68 @@ export function useMidi(state: State, selectedPad: string, dispatch: React.Dispa
   const { publish } = useSignal()
 
   useEffect(() => {
-      WebMidi
-        .enable()
-        .then(onEnabled)
-        .catch(err => console.log(err));
+    WebMidi
+      .enable()
+      .then(onEnabled)
+      .catch(err => console.log(err));
   
-      // Function triggered when WEBMIDI.js is ready
-      function onEnabled() {
+    // Function triggered when WEBMIDI.js is ready
+    function onEnabled() {
 
-        if (WebMidi.inputs.length < 1) {
-          console.log("No device detected.")
-        } else {
-          const deviceNames: string[] = []
+      if (WebMidi.inputs.length < 1) {
+        console.log("No device detected.")
+      } else {
+        const deviceNames: string[] = []
 
-          WebMidi.inputs.forEach((device) => {
-            deviceNames.push(device.name)
-          });
+        WebMidi.inputs.forEach((device) => {
+          deviceNames.push(device.name)
+        });
 
-          dispatch({
-            type: 'SET_DEVICES',
-            devices: deviceNames
-          })
-        }
+        dispatch({
+          type: 'SET_DEVICES',
+          devices: deviceNames
+        })
       }
-    }, [])
+    }
+  }, [])
 
-    useEffect(() => {
-      const device = WebMidi.inputs.find(item => item.name === state.selectedDevice)
-      const previousDevice = WebMidi.inputs.find(item => item.name === previousDeviceName)
+  useEffect(() => {
+    const device = WebMidi.inputs.find(item => item.name === state.selectedDevice)
+    const previousDevice = WebMidi.inputs.find(item => item.name === previousDeviceName)
 
-      if(!device) return
+    if(!device) return
 
-      // cleanup
-      previousDevice?.removeListener('noteon')
-      setPreviousDeviceName(device.name)
+    // cleanup
+    previousDevice?.removeListener('noteon')
+    setPreviousDeviceName(device.name)
       
         
-      device.addListener("noteon", e => {
-        console.log(e.note.identifier)
-        console.log(e.note.number)
-        console.log(e.note.name);
+    device.addListener("noteon", e => {
+      console.log(e.note.identifier)
+      console.log(e.note.number)
+      console.log(e.note.name);
 
-        if(selectedPad) {
-          dispatch({
-            type: 'APPLY_PAD_KEY',
-            key: e.note.number,
-            id: selectedPad
-          })
+      if(selectedPad) {
+        dispatch({
+          type: 'APPLY_PAD_KEY',
+          key: e.note.number,
+          id: selectedPad
+        })
 
-          return
-        }
+        return
+      }
 
-        console.log(e.note.number, state.keys[e.note.number])
+      console.log(e.note.number, state.keys[e.note.number])
 
-        publish(state.keys[e.note.number])
+      publish(state.keys[e.note.number])
       
-        // if(e.note.number === 36) {
-        //   sound1.play();
-        // }
-        // if(e.note.number === 37) {
-        //   sound2.play();
-        // }
-      }, {channels: device.channels.map((_, i) => i)});
+      // if(e.note.number === 36) {
+      //   sound1.play();
+      // }
+      // if(e.note.number === 37) {
+      //   sound2.play();
+      // }
+    }, {channels: device.channels.map((_, i) => i)});
 
-    }, [state.selectedDevice, selectedPad])
+  }, [state.selectedDevice, selectedPad])
 }

@@ -6,10 +6,10 @@ import { Dispatch } from "react";
 import { Action } from "../../data/types";
 
 export function Interface(props: State & {dispatch: Dispatch<Action>}) {
-    return (
-        <Flex justify={'between'}>
-            <DeviceSelector dispatch={props.dispatch} devices={props.devices} />
-            <SoundPackButton />
-        </Flex>
-    )
+  return (
+    <Flex justify={'between'}>
+      <DeviceSelector dispatch={props.dispatch} devices={props.devices} />
+      <SoundPackButton />
+    </Flex>
+  )
 }
